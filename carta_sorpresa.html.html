@@ -1,0 +1,331 @@
+<<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta para mi Vida</title>
+    
+    <style>
+
+        /* ========================================= */
+        /* ESTILOS DE FONDO Y DISEÑO GENERAL */
+        /* (Corazones Separados y Claros) */
+        /* ========================================= */
+        body {
+            /* Fondo: Rosa Pastel */
+            background-color: #FFC5D3; 
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            transition: opacity 0.5s ease-in-out;
+            
+            /* Patrón de Corazones (Simple, Claro y Separado) */
+            background-image: 
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23FF746C' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.45 5.45 0 0 1 7.5 3a5.45 5.45 0 0 1 4.5 2.07A5.45 5.45 0 0 1 16.5 3a5.45 5.45 0 0 1 5.5 5.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E"),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23FF746C' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.45 5.45 0 0 1 7.5 3a5.45 5.45 0 0 1 4.5 2.07A5.45 5.45 0 0 1 16.5 3a5.45 5.45 0 0 1 5.5 5.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+                
+            background-size: 60px 220px, 60px 220px; 
+            background-position: 0 0, 110px 110px; 
+            background-repeat: repeat; 
+        }
+
+        /* Contenedores de las páginas */
+        .page-container {
+            width: 90%;
+            max-width: 800px;
+            padding: 30px; 
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.85); /* Fondo blanco semi-transparente */
+            border-radius: 15px; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+            display: none; 
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ========================================= */
+        /* ESTILOS DEL TÍTULO Y TEXTO */
+        /* ========================================= */
+        #page1 h1 {
+            font-family: 'Georgia', serif; 
+            font-size: 60px; /* Título Grande */
+            color: #4C0000; 
+            border-bottom: 2px solid #FF746C;
+            padding-bottom: 10px;
+        }
+
+        #page3 p {
+            font-family: 'Verdana', sans-serif;
+            font-size: 28px;
+            color: #4C0000;
+            line-height: 1.5;
+        }
+
+        /* ========================================= */
+        /* ESTILOS DEL BOTÓN INTERACTIVO */
+        /* ========================================= */
+        .btn-style {
+            background-color: #FE2194; /* Rosa Claro */
+            color: white;
+            border: none;
+            width: 60px; /* Tamaño del botón */
+            height: 60px;
+            border-radius: 15px; 
+            cursor: pointer;
+            box-shadow: 0 4px #AA1562; 
+            transition: all 0.1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+        }
+
+        .btn-style:active {
+            box-shadow: 0 0 #AA1562;
+            transform: translateY(4px); 
+        }
+        
+        /* Estilo para la flecha dentro del botón */
+        .btn-style::after {
+            font-size: 45px; 
+            color: #FFFFFF; 
+            font-weight: bold; 
+        }
+
+        /* Botón de la página 1 y 3 (flecha derecha) */
+        #btnPage1::after, #btnPage3::after {
+            content: "→";
+        }
+        
+        /* Flechas de navegación del carrusel */
+        .nav-btn {
+            margin: 0 10px;
+        }
+        .nav-btn.prev::after {
+            content: "←";
+        }
+        .nav-btn.next::after {
+            content: "→";
+        }
+
+
+        /* ========================================= */
+        /* ESTILOS DEL MARCO Y CARRUSEL DE IMÁGENES */
+        /* ========================================= */
+        .mobile-frame {
+            width: 300px;
+            height: 600px;
+            background-color: #333;
+            border-radius: 30px;
+            padding: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            margin: 20px 0;
+            overflow: hidden;
+            border: 5px solid white;
+            position: relative; /* Contenedor para las imágenes */
+        }
+        
+        /* Contenedor de todas las imágenes */
+        .image-carousel {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .carousel-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0; /* Imagen oculta por defecto */
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; 
+        }
+        
+        /* Animación de entrada y salida */
+        .carousel-img.active {
+            opacity: 1; /* Imagen visible */
+            transform: scale(1);
+        }
+        
+        /* Animación de salida (opcional: para darle un toque) */
+        .carousel-img.animate-out {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .carousel-img.animate-in {
+             opacity: 1;
+             transform: scale(1.05);
+        }
+        
+        /* Contenedor de los botones de navegación de la página 2 */
+        .controls-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .active {
+            display: flex; 
+        }
+
+    </style>
+</head>
+<body>
+
+    <audio id="myAudio" loop>
+        <source src="musica_sorpresa.mp3" type="audio/mpeg"> 
+        Tu navegador no soporta el tag de audio.
+    </audio>
+    
+    <div id="page1" class="page-container active">
+        <h1>Carta para mi vida</h1>
+        <button id="btnPage1" class="btn-style" onclick="nextPage(2)"></button>
+    </div>
+
+    <div id="page2" class="page-container">
+        
+        <div class="mobile-frame">
+            <div id="carousel" class="image-carousel">
+                </div>
+        </div>
+
+        <div class="controls-container">
+            <button class="btn-style nav-btn prev" onclick="changeImage(-1)"></button>
+            
+            <button id="btnPage3" class="btn-style" onclick="nextPage(3)" style="display: none; margin: 0 20px;"></button>
+            
+            <button class="btn-style nav-btn next" onclick="changeImage(1)"></button>
+        </div>
+        
+    </div>
+
+    <div id="page3" class="page-container">
+        <p>Muchas gracias por dejarme estar en su vida, la amo muchisimo con amor Martín</p>
+    </div>
+
+    <script>
+        const audio = document.getElementById('myAudio');
+        const carousel = document.getElementById('carousel');
+        const continueButton = document.getElementById('btnPage3');
+        
+        // Configuración del Carrusel
+        const imageFiles = [
+            'imagen1.jpg', 
+            'imagen2.jpg', 
+            'imagen3.jpg', 
+            'imagen4.jpg', 
+            'imagen5.jpg', 
+            'imagen6.jpg', 
+            'imagen7.jpg'
+        ];
+        let currentImageIndex = 0; // Índice de la imagen actual
+        
+        
+        // 1. FUNCIONALIDAD DEL CARRUSEL
+        
+        // Función para cargar las imágenes y el estado inicial
+        function setupCarousel() {
+            imageFiles.forEach((src, index) => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.classList.add('carousel-img');
+                // La primera imagen se activa
+                if (index === 0) {
+                    img.classList.add('active');
+                }
+                carousel.appendChild(img);
+            });
+        }
+        
+        // Función para cambiar de imagen (1 para adelante, -1 para atrás)
+        function changeImage(direction) {
+            const images = document.querySelectorAll('.carousel-img');
+            
+            // 1. Desactivar y animar la imagen actual saliente
+            images[currentImageIndex].classList.remove('active');
+            images[currentImageIndex].classList.add('animate-out');
+            
+            // 2. Calcular el nuevo índice (circular)
+            let newIndex = currentImageIndex + direction;
+            if (newIndex >= imageFiles.length) {
+                newIndex = 0; // Volver al inicio
+            } else if (newIndex < 0) {
+                newIndex = imageFiles.length - 1; // Ir al final
+            }
+            
+            // 3. Actualizar el índice global
+            currentImageIndex = newIndex;
+            
+            // 4. Activar y animar la nueva imagen entrante
+            images[currentImageIndex].classList.remove('animate-out'); // Limpiar animación de salida
+            images[currentImageIndex].classList.add('animate-in'); // Aplicar animación de entrada
+            
+            // Esperar un momento (para la animación) y luego activar completamente
+            setTimeout(() => {
+                images[currentImageIndex].classList.add('active');
+                images.forEach((img, index) => {
+                     if (index !== currentImageIndex) {
+                        img.classList.remove('animate-in'); // Limpiar si es otra imagen
+                     }
+                });
+            }, 50); 
+            
+            // 5. Mostrar el botón de Continuar al llegar a la última imagen
+            if (currentImageIndex === imageFiles.length - 1) {
+                continueButton.style.display = 'flex'; 
+            } else {
+                continueButton.style.display = 'none';
+            }
+        }
+        
+        
+        // 2. FUNCIONALIDAD DE NAVEGACIÓN ENTRE PÁGINAS
+        
+        function nextPage(pageNum) {
+            const pages = document.querySelectorAll('.page-container');
+            
+            // Ocultar todas las páginas
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Mostrar la página solicitada
+            const targetPage = document.getElementById('page' + pageNum);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            // Lógica específica para la PÁGINA 2 (Carrusel y Audio)
+            if (pageNum === 2) {
+                // Inicia la música
+                audio.play().catch(error => { 
+                    console.log("No se pudo iniciar el audio automáticamente.", error);
+                });
+                
+                // Asegura que la primera imagen se muestre y el botón de continuar esté oculto al inicio
+                currentImageIndex = 0;
+                setupCarousel(); // Carga las imágenes
+                continueButton.style.display = 'none'; 
+            }
+            
+            // Lógica específica para la PÁGINA 3 (Mensaje Final)
+            if (pageNum === 3) {
+                // Detiene la música
+                audio.pause();
+                audio.currentTime = 0; 
+            }
+        }
+        
+        // Inicialización: Asegurar que el botón de la página 3 esté oculto
+        continueButton.style.display = 'none';
+        
+    </script>
+</body>
+</html>
